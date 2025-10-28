@@ -1,42 +1,135 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  display: flex;
+  width: 90%;
+  max-width: 1000px;
+  height: 80vh;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Lado izquierdo con logo */
+.left-side {
+  flex: 1;
+  background: radial-gradient(circle at center, #3498db, #0f2027);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-large {
+  width: 60%;
+  max-width: 250px;
+}
+
+/* Lado derecho: formulario */
+.right-side {
+  flex: 1;
+  background-color: #10141a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+ 
+  border-radius: 16px;
+  padding: 40px;
+  width: 320px;
   text-align: center;
+
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.login-box h2 {
+  margin-bottom: 8px;
+  color: #fff;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.subtitle {
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 25px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #ddd;
 }
 
-.card {
-  padding: 2em;
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  background-color: #1e2732;
+  color: #fff;
 }
 
-.read-the-docs {
-  color: #888;
+input::placeholder {
+  color: #aaa;
+}
+
+input:focus {
+  outline: 2px solid #3b82f6;
+  background-color: #24303f;
+}
+
+.error {
+  color: #f87171;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.forgot {
+  display: block;
+  text-align: right;
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+button {
+  width: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  transform: scale(1.03);
+}
+
+.footer {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 25px;
+  line-height: 1.4;
 }
