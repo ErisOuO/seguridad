@@ -1,19 +1,38 @@
 import { useState } from 'react'
 import './App.css'
 
+
+const Dashboard = () => {
+  return (
+    <div className="dashboard-container">
+      <h1> ¡Bienvenido!</h1>
+      <p>Has iniciado sesión correctamente.</p>
+    </div>
+  )
+}
+
 function App() {
   const [user, setUser] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  //Estado para controlar qué componente mostrar
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const handleLogin = (e) => {
     e.preventDefault()
     if (user === 'admin' && password === '12345') {
       setError('')
       alert('Inicio de sesión exitoso ✅')
+      
+      setIsLoggedIn(true)
     } else {
       setError('Contraseña incorrecta')
     }
+  }
+   //Renderización Condicional
+  if (isLoggedIn) {
+    return <Dashboard />
   }
 
   return (
