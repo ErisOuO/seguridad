@@ -1,11 +1,9 @@
-// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import Login from './login.jsx';
 import SolicitarEnlace from './SolicitarEnlace.jsx';
-import ValidarToken from './ValidarToken.jsx';
+import ValidarToken from './components/ValidarToken.jsx'; // ← NUEVO
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -13,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/solicitar-enlace" element={<SolicitarEnlace />} />
-        <Route path="/validar-acceso" element={<ValidarToken />} /> {/*ruta*/}
+        <Route path="/validar-acceso" element={<ValidarToken />} /> {/* ← NUEVO */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

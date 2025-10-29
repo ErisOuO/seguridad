@@ -1,22 +1,16 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "db.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "nodemailer": "^6.9.0",
+    "jsonwebtoken": "^9.0.0",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.2",
-    "nodemailer": "^7.0.10"
+    "crypto": "^1.0.1"
   }
 }
