@@ -9,7 +9,7 @@ function Login() {
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // 🔗 URL de tu API
+  // 🔗 URL de tu API en Vercel
   const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/register';
 
   const handleRegister = async (e) => {
@@ -32,13 +32,22 @@ function Login() {
       console.log('📨 Status:', res.status)
       
       const data = await res.json()
-      console.log('📨 Respuesta:', data)
+      console.log('📨 Respuesta completa:', data)
 
       if (res.ok && data.success) {
-        setMsg(data.message || '✅ Usuario registrado exitosamente')
+        // ✅ Mostrar mensaje con información del cifrado
+        setMsg(`${data.message} - Contraseña cifrada: ${data.data.password_cifrado.substring(0, 30)}...`)
         setNombre('')
         setCorreo('')
         setPassword('')
+        
+        // Mostrar en consola el cifrado completo
+        console.log('🔐 CONTRASEÑA CIFRADA COMPLETA (AES-128):', data.data.password_cifrado)
+        console.log('📊 Información del cifrado:', {
+          algoritmo: data.data.algoritmo,
+          longitud: data.data.longitud_cifrado,
+          fecha: data.data.registeredAt
+        })
       } else {
         setError(data.error || '❌ Error al registrar usuario')
       }
@@ -62,15 +71,15 @@ function Login() {
 
       <div className="right-side">
         <div className="login-box">
-          <h2>Registro Seguro</h2>
-          <p className="subtitle">Contraseñas cifradas en la base de datos</p>
+          <h2>Registro Seguro AES-128</h2>
+          <p className="subtitle">Contraseñas cifradas con algoritmo AES-128</p>
 
           <form onSubmit={handleRegister}>
             <div className="form-group">
               <label>Nombre completo</label>
               <input
                 type="text"
-                placeholder="Ingresa tu nombre"
+                placeholder="Ingresa tu nombre completo"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
@@ -82,7 +91,7 @@ function Login() {
               <label>Correo electrónico</label>
               <input
                 type="email"
-                placeholder="Ingresa tu correo"
+                placeholder="Ingresa tu correo electrónico"
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
                 required
@@ -94,7 +103,7 @@ function Login() {
               <label>Contraseña</label>
               <input
                 type="password"
-                placeholder="Crea una contraseña"
+                placeholder="Crea una contraseña segura (mínimo 6 caracteres)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -105,13 +114,13 @@ function Login() {
 
             {error && (
               <div className="alert error">
-                <strong>Error:</strong> {error}
+                <strong>❌ Error:</strong> {error}
               </div>
             )}
             
             {msg && (
               <div className="alert success">
-                <strong>Éxito:</strong> {msg}
+                <strong>✅ Éxito:</strong> {msg}
               </div>
             )}
 
@@ -120,14 +129,18 @@ function Login() {
               className="submit-btn"
               disabled={loading}
             >
-              {loading ? '⏳ Registrando...' : 'Registrar Usuario'}
+              {loading ? '⏳ Cifrando y registrando...' : '🔐 Registrar Usuario'}
             </button>
           </form>
 
           <div className="footer">
             <p>
-              Cifrado AES-128 · MongoDB
-              <br />© 2025 Seguridad Informática
+              <strong>Tecnologías utilizadas:</strong><br/>
+              React + Vercel + AES-128 + CryptoJS
+              <br/>
+              <strong>Seguridad:</strong> Cifrado de contraseñas en el servidor
+              <br/>
+              © 2025 Sistema de Seguridad Informática
             </p>
           </div>
         </div>
