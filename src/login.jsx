@@ -19,7 +19,7 @@ function Login() {
     setLoading(true)
 
     try {
-      console.log('📤 Enviando datos...', { nombre, correo, password: '***' })
+      console.log('📤 Enviando datos a MongoDB...', { nombre, correo, password: '***' })
       
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -35,28 +35,29 @@ function Login() {
       console.log('📨 Respuesta completa:', data)
 
       if (res.ok && data.success) {
-        // ✅ Mostrar mensaje con información de MongoDB
-        setMsg(`${data.message} - ID: ${data.data.id}`)
+        // ✅ Mostrar mensaje con información de MongoDB REAL
+        setMsg(`${data.message} - ID: ${data.data.mongo_id}`)
         setNombre('')
         setCorreo('')
         setPassword('')
         
-        // Mostrar en consola la info completa de MongoDB
-        console.log('📊 USUARIO GUARDADO EN MONGODB:', {
-          id: data.data.id,
+        // Mostrar en consola la info completa de MongoDB REAL
+        console.log('🔥 USUARIO GUARDADO EN MONGODB REAL:', {
           mongo_id: data.data.mongo_id,
           nombre: data.data.nombre,
           correo: data.data.correo,
-          algoritmo: data.data.algoritmo,
+          base_datos: data.data.base_datos,
+          coleccion: data.data.coleccion,
           fecha_registro: data.data.fecha_registro,
-          cifrado: data.data.password_cifrado
+          algoritmo: data.data.algoritmo,
+          password_cifrado: data.data.password_cifrado
         })
       } else {
         setError(data.error || '❌ Error al registrar usuario')
       }
     } catch (err) {
       console.error('💥 Error completo:', err)
-      setError('⚠️ Error de conexión con el servidor. Intenta nuevamente.')
+      setError('⚠️ Error de conexión con la base de datos. Intenta nuevamente.')
     } finally {
       setLoading(false)
     }
@@ -71,15 +72,15 @@ function Login() {
           className="logo-large"
         />
         <div className="security-badge">
-          <span>🔒 Cifrado AES-128 + MongoDB</span>
+          <span>🔒 MongoDB Real + AES-128</span>
         </div>
       </div>
 
       <div className="right-side">
         <div className="login-box">
           <div className="header">
-            <h2>Registro Seguro</h2>
-            <p className="subtitle">Usuarios guardados en base de datos MongoDB</p>
+            <h2>Registro en Base de Datos</h2>
+            <p className="subtitle">Usuarios guardados en MongoDB Atlas en tiempo real</p>
           </div>
 
           <form onSubmit={handleRegister}>
@@ -119,7 +120,7 @@ function Login() {
                 disabled={loading}
               />
               <div className="password-info">
-                🔐 Esta contraseña será cifrada y guardada en MongoDB
+                🔐 Esta contraseña será cifrada con AES-128 y guardada en MongoDB Atlas
               </div>
             </div>
 
@@ -149,11 +150,11 @@ function Login() {
               {loading ? (
                 <>
                   <span className="loading-spinner"></span>
-                  Guardando en MongoDB...
+                  Conectando a MongoDB...
                 </>
               ) : (
                 <>
-                  <span className="btn-icon">💾</span>
+                  <span className="btn-icon">🗄️</span>
                   Guardar en Base de Datos
                 </>
               )}
@@ -168,14 +169,18 @@ function Login() {
                 <span>Vercel</span>
                 <span>MongoDB</span>
                 <span>AES-128</span>
+                <span>Node.js</span>
                 <span>API REST</span>
               </div>
             </div>
             <div className="security-info">
-              <strong>Base de datos:</strong> Los usuarios se guardan en MongoDB Atlas con contraseñas cifradas
+              <strong>Base de datos real:</strong> MongoDB Atlas - Los usuarios se guardan en la nube con contraseñas cifradas
+            </div>
+            <div className="database-info">
+              <strong>Colección:</strong> seguridad.usuarios
             </div>
             <div className="copyright">
-              © 2025 Sistema de Seguridad con MongoDB
+              © 2025 Sistema con MongoDB Real - Base de datos en la nube
             </div>
           </div>
         </div>

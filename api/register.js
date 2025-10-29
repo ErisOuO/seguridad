@@ -5,9 +5,6 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = 'seguridad';
 const COLLECTION_NAME = 'usuarios';
 
-// Clave para el cifrado simulado
-const AES_KEY = 'miclavesegura123';
-
 let cachedClient = null;
 
 async function connectToDatabase() {
@@ -17,19 +14,28 @@ async function connectToDatabase() {
 
   try {
     console.log('🔗 Conectando a MongoDB...');
-    const client = new MongoClient(MONGODB_URI);
+    
+    if (!MONGODB_URI) {
+      throw new Error('MONGODB_URI no está definida');
+    }
+
+    const client = new MongoClient(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
     await client.connect();
     console.log('✅ Conectado a MongoDB exitosamente');
     
     cachedClient = client;
     return client;
   } catch (error) {
-    console.error('❌ Error conectando a MongoDB:', error);
+    console.error('❌ Error conectando a MongoDB:', error.message);
     throw error;
   }
 }
 
-// Función para simular cifrado AES-128
+// Función para simular cifrado AES-128 (temporal)
 function simularCifradoAES(texto) {
   const timestamp = Date.now();
   const textoParaCifrar = `aes128:${texto}:${timestamp}`;
@@ -51,6 +57,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+  let client;
+  
   try {
     const { nombre, correo, password } = req.body;
 
@@ -62,12 +70,14 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log('📝 Registrando usuario en MongoDB REAL:', { nombre, correo });
+
     // 🔐 Simular cifrado AES-128
     const passwordCifrado = simularCifradoAES(password);
     console.log('🔐 Contraseña cifrada:', passwordCifrado);
 
-    // Conectar a MongoDB
-    const client = await connectToDatabase();
+    // 🔥 CONECTAR A MONGODB REAL
+    client = await connectToDatabase();
     const db = client.db(DB_NAME);
     const collection = db.collection(COLLECTION_NAME);
 
@@ -80,10 +90,10 @@ export default async function handler(req, res) {
       });
     }
 
-    // Crear documento del usuario
-    const usuario = {
-      nombre,
-      correo,
+    // Crear documento del usuario para MongoDB
+    const usuarioDocument = {
+      nombre: nombre.trim(),
+      correo: correo.toLowerCase().trim(),
       password_cifrado: passwordCifrado,
       algoritmo: 'AES-128',
       fecha_registro: new Date(),
@@ -91,43 +101,48 @@ export default async function handler(req, res) {
       metadata: {
         longitud_original: password.length,
         longitud_cifrado: passwordCifrado.length,
-        version: '1.0'
+        version: '1.0',
+        entorno: 'produccion'
       }
     };
 
-    // 🔥 GUARDAR EN MONGODB
-    const resultado = await collection.insertOne(usuario);
-    console.log('✅ Usuario guardado en MongoDB:', resultado.insertedId);
+    // 🔥 GUARDAR EN MONGODB REAL
+    const resultado = await collection.insertOne(usuarioDocument);
+    console.log('✅ Usuario GUARDADO EN MONGODB REAL:', resultado.insertedId);
 
     // Respuesta exitosa
     res.status(200).json({
       success: true,
-      message: '✅ Usuario registrado con cifrado AES-128 en MongoDB',
+      message: '✅ Usuario registrado en MONGODB REAL con cifrado AES-128',
       data: {
-        id: resultado.insertedId,
-        nombre,
-        correo,
+        id: resultado.insertedId.toString(),
+        nombre: usuarioDocument.nombre,
+        correo: usuarioDocument.correo,
         password_cifrado: passwordCifrado,
         algoritmo: 'AES-128',
-        fecha_registro: usuario.fecha_registro,
-        mongo_id: resultado.insertedId
+        fecha_registro: usuarioDocument.fecha_registro,
+        mongo_id: resultado.insertedId.toString(),
+        base_datos: 'MongoDB Atlas (REAL)',
+        coleccion: COLLECTION_NAME
       }
     });
 
   } catch (error) {
-    console.error('💥 Error en el servidor:', error);
+    console.error('💥 Error en MongoDB:', error);
     
     if (error.code === 11000) {
       return res.status(400).json({
         success: false,
-        error: '❌ El correo electrónico ya está registrado'
+        error: '❌ El correo electrónico ya está registrado en la base de datos'
       });
     }
     
     res.status(500).json({
       success: false,
-      error: '❌ Error interno del servidor',
+      error: '❌ Error conectando con la base de datos',
       detalle: error.message
     });
+  } finally {
+    // No cerramos la conexión para reutilizarla
   }
 }
