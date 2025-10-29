@@ -1,68 +1,40 @@
 import { useState } from 'react'
 import './App.css'
 
-function App() {
+function Login() {
   const [nombre, setNombre] = useState('')
   const [correo, setCorreo] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
 
-  // 🔗 URL de tu backend en Vercel - CAMBIA ESTA URL POR LA TUYA
-  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/usuarios';
+  // 🔗 URL RELATIVA - Vercel maneja el routing automáticamente
+  const API_URL = '/api/usuarios';
 
-  // --- Registrar usuario ---
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
     setMsg('')
 
-    // Validaciones básicas
-    if (!nombre || !correo || !password) {
-      setError('⚠️ Todos los campos son obligatorios')
-      return
-    }
-
-    if (password.length < 6) {
-      setError('⚠️ La contraseña debe tener al menos 6 caracteres')
-      return
-    }
-
     try {
-      console.log('📤 Enviando datos a:', API_URL)
-      console.log('📝 Datos:', { nombre, correo, password })
-
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, correo, password }),
       })
 
-      console.log('📨 Respuesta status:', res.status)
-      
       const data = await res.json()
-      console.log('📨 Respuesta data:', data)
 
       if (res.ok) {
-        setMsg('✅ Usuario registrado correctamente en la base de datos')
+        setMsg('✅ Usuario registrado correctamente en MongoDB')
         setNombre('')
         setCorreo('')
         setPassword('')
-        
-        // Opcional: Mostrar los datos guardados
-        setTimeout(() => {
-          setMsg(`✅ Usuario: ${data.usuario.nombre} (${data.usuario.correo}) guardado en BD`)
-        }, 1000)
-        
       } else {
-        setError(data.error || '❌ Error al registrar usuario')
+        setError(data.error || 'Error al registrar usuario')
       }
     } catch (err) {
-      console.error('💥 Error completo:', err)
-      setError('⚠️ Error al conectar con el servidor. Verifica la URL.')
+      setError('⚠️ Error de conexión con el servidor')
     }
   }
 
@@ -79,14 +51,14 @@ function App() {
       <div className="right-side">
         <div className="login-box">
           <h2>Registro de usuario</h2>
-          <p className="subtitle">Guarda nuevos usuarios en la base de datos</p>
+          <p className="subtitle">Base de datos MongoDB</p>
 
           <form onSubmit={handleRegister}>
             <div className="form-group">
               <label>Nombre completo</label>
               <input
                 type="text"
-                placeholder="Ingresa tu nombre completo"
+                placeholder="Ingresa tu nombre"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
@@ -97,7 +69,7 @@ function App() {
               <label>Correo electrónico</label>
               <input
                 type="email"
-                placeholder="Ingresa tu correo electrónico"
+                placeholder="Ingresa tu correo"
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
                 required
@@ -108,7 +80,7 @@ function App() {
               <label>Contraseña</label>
               <input
                 type="password"
-                placeholder="Crea una contraseña segura"
+                placeholder="Crea una contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -145,4 +117,4 @@ function App() {
   )
 }
 
-export default App
+export default Login
