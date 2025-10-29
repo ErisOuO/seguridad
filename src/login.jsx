@@ -9,8 +9,8 @@ function Login() {
   const [msg, setMsg] = useState('')
 
   // 🔗 URL de tu API en Vercel
-  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/usuarios';
-
+ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/usuarios';
+ 
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
