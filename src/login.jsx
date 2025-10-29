@@ -9,7 +9,9 @@ function App() {
   const [msg, setMsg] = useState('')
 
   // 🔗 Usa la URL de tu backend (cuando lo subas)
-  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/'
+const API_URL = 'https://tu-proyecto.vercel.app/api'
+
+
 
   // --- Registrar usuario ---
   const handleRegister = async (e) => {
