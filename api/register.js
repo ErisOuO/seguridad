@@ -21,11 +21,12 @@ export default async function handler(req, res) {
     // Validar campos
     if (!nombre || !correo || !password) {
       return res.status(400).json({ 
+        success: false,
         error: 'Todos los campos son requeridos' 
       });
     }
 
-    // ✅ Respuesta exitosa SIMPLE
+    // ✅ Respuesta exitosa
     return res.status(200).json({
       success: true,
       message: 'Usuario registrado exitosamente',
@@ -39,8 +40,8 @@ export default async function handler(req, res) {
   } catch (error) {
     // Error general
     return res.status(500).json({
-      error: 'Error interno del servidor',
-      details: error.message
+      success: false,
+      error: 'Error interno del servidor'
     });
   }
 }

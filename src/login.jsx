@@ -7,16 +7,20 @@ function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  // 🔗 URL de tu API en Vercel
-const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/register';
+  // 🔗 URL de tu API
+  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/register';
 
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
     setMsg('')
+    setLoading(true)
 
     try {
+      console.log('📤 Enviando datos...')
+      
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 
@@ -25,22 +29,24 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
         body: JSON.stringify({ nombre, correo, password }),
       })
 
+      console.log('📨 Status:', res.status)
+      
       const data = await res.json()
+      console.log('📨 Respuesta:', data)
 
-      if (res.ok) {
-        setMsg(`✅ ${data.mensaje}`)
+      if (res.ok && data.success) {
+        setMsg(data.message || '✅ Usuario registrado exitosamente')
         setNombre('')
         setCorreo('')
         setPassword('')
-        
-        // Mostrar info del cifrado
-        console.log('🔐 Contraseña cifrada:', data.usuario.password_cifrado)
       } else {
-        setError(data.error || 'Error al registrar usuario')
+        setError(data.error || '❌ Error al registrar usuario')
       }
     } catch (err) {
+      console.error('💥 Error completo:', err)
       setError('⚠️ Error de conexión con el servidor')
-      console.error('Error completo:', err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -56,7 +62,7 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
 
       <div className="right-side">
         <div className="login-box">
-          <h2>Registro Seguro AES-128</h2>
+          <h2>Registro Seguro</h2>
           <p className="subtitle">Contraseñas cifradas en la base de datos</p>
 
           <form onSubmit={handleRegister}>
@@ -68,6 +74,7 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -79,6 +86,7 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -91,6 +99,7 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength="6"
+                disabled={loading}
               />
             </div>
 
@@ -106,8 +115,12 @@ const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-
               </div>
             )}
 
-            <button type="submit" className="submit-btn">
-              🔐 Registrar Usuario
+            <button 
+              type="submit" 
+              className="submit-btn"
+              disabled={loading}
+            >
+              {loading ? '⏳ Registrando...' : 'Registrar Usuario'}
             </button>
           </form>
 
