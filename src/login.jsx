@@ -8,8 +8,8 @@ function Login() {
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
 
-  // 🔗 URL RELATIVA - Vercel maneja el routing automáticamente
-  const API_URL = '/api/usuarios';
+  // 🔗 URL de tu API en Vercel
+  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/api/usuarios';
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -19,22 +19,28 @@ function Login() {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ nombre, correo, password }),
       })
 
       const data = await res.json()
 
       if (res.ok) {
-        setMsg('✅ Usuario registrado correctamente en MongoDB')
+        setMsg(`✅ ${data.mensaje}`)
         setNombre('')
         setCorreo('')
         setPassword('')
+        
+        // Mostrar info del cifrado
+        console.log('🔐 Contraseña cifrada:', data.usuario.password_cifrado)
       } else {
         setError(data.error || 'Error al registrar usuario')
       }
     } catch (err) {
       setError('⚠️ Error de conexión con el servidor')
+      console.error('Error completo:', err)
     }
   }
 
@@ -50,8 +56,8 @@ function Login() {
 
       <div className="right-side">
         <div className="login-box">
-          <h2>Registro de usuario</h2>
-          <p className="subtitle">Base de datos MongoDB</p>
+          <h2>Registro Seguro AES-128</h2>
+          <p className="subtitle">Contraseñas cifradas en la base de datos</p>
 
           <form onSubmit={handleRegister}>
             <div className="form-group">
@@ -101,14 +107,14 @@ function Login() {
             )}
 
             <button type="submit" className="submit-btn">
-              Registrar usuario
+              🔐 Registrar Usuario
             </button>
           </form>
 
           <div className="footer">
             <p>
-              soporte@empresa.com · +52 77 11 89 12 65
-              <br />© 2025 Empresa — Todos los derechos reservados
+              Cifrado AES-128 · MongoDB
+              <br />© 2025 Seguridad Informática
             </p>
           </div>
         </div>
