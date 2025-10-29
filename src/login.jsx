@@ -19,7 +19,7 @@ function Login() {
     setLoading(true)
 
     try {
-      console.log('📤 Enviando datos...')
+      console.log('📤 Enviando datos...', { nombre, correo, password: '***' })
       
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -36,16 +36,18 @@ function Login() {
 
       if (res.ok && data.success) {
         // ✅ Mostrar mensaje con información del cifrado
-        setMsg(`${data.message} - Contraseña cifrada: ${data.data.password_cifrado.substring(0, 30)}...`)
+        setMsg(`${data.message} - Cifrado: ${data.data.password_cifrado.substring(0, 25)}...`)
         setNombre('')
         setCorreo('')
         setPassword('')
         
         // Mostrar en consola el cifrado completo
-        console.log('🔐 CONTRASEÑA CIFRADA COMPLETA (AES-128):', data.data.password_cifrado)
-        console.log('📊 Información del cifrado:', {
+        console.log('🔐 INFORMACIÓN COMPLETA DEL CIFRADO:', {
           algoritmo: data.data.algoritmo,
-          longitud: data.data.longitud_cifrado,
+          cifrado_completo: data.data.password_cifrado,
+          longitud_original: data.data.longitud_original,
+          longitud_cifrado: data.data.longitud_cifrado,
+          nota: data.data.nota,
           fecha: data.data.registeredAt
         })
       } else {
@@ -53,7 +55,7 @@ function Login() {
       }
     } catch (err) {
       console.error('💥 Error completo:', err)
-      setError('⚠️ Error de conexión con el servidor')
+      setError('⚠️ Error de conexión con el servidor. Intenta nuevamente.')
     } finally {
       setLoading(false)
     }
@@ -64,19 +66,24 @@ function Login() {
       <div className="left-side">
         <img
           src="https://cdn-icons-png.flaticon.com/512/906/906343.png"
-          alt="logo"
+          alt="logo seguridad"
           className="logo-large"
         />
+        <div className="security-badge">
+          <span>🔒 Cifrado AES-128</span>
+        </div>
       </div>
 
       <div className="right-side">
         <div className="login-box">
-          <h2>Registro Seguro AES-128</h2>
-          <p className="subtitle">Contraseñas cifradas con algoritmo AES-128</p>
+          <div className="header">
+            <h2>Registro Seguro</h2>
+            <p className="subtitle">Sistema de cifrado avanzado</p>
+          </div>
 
           <form onSubmit={handleRegister}>
             <div className="form-group">
-              <label>Nombre completo</label>
+              <label>Nombre completo *</label>
               <input
                 type="text"
                 placeholder="Ingresa tu nombre completo"
@@ -88,10 +95,10 @@ function Login() {
             </div>
 
             <div className="form-group">
-              <label>Correo electrónico</label>
+              <label>Correo electrónico *</label>
               <input
                 type="email"
-                placeholder="Ingresa tu correo electrónico"
+                placeholder="ejemplo@correo.com"
                 value={correo}
                 onChange={(e) => setCorreo(e.target.value)}
                 required
@@ -100,27 +107,36 @@ function Login() {
             </div>
 
             <div className="form-group">
-              <label>Contraseña</label>
+              <label>Contraseña *</label>
               <input
                 type="password"
-                placeholder="Crea una contraseña segura (mínimo 6 caracteres)"
+                placeholder="Mínimo 6 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength="6"
                 disabled={loading}
               />
+              <div className="password-info">
+                🔐 Esta contraseña será cifrada con AES-128
+              </div>
             </div>
 
             {error && (
               <div className="alert error">
-                <strong>❌ Error:</strong> {error}
+                <div className="alert-icon">❌</div>
+                <div className="alert-content">
+                  <strong>Error:</strong> {error}
+                </div>
               </div>
             )}
             
             {msg && (
               <div className="alert success">
-                <strong>✅ Éxito:</strong> {msg}
+                <div className="alert-icon">✅</div>
+                <div className="alert-content">
+                  <strong>Éxito:</strong> {msg}
+                </div>
               </div>
             )}
 
@@ -129,19 +145,36 @@ function Login() {
               className="submit-btn"
               disabled={loading}
             >
-              {loading ? '⏳ Cifrando y registrando...' : '🔐 Registrar Usuario'}
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Procesando cifrado...
+                </>
+              ) : (
+                <>
+                  <span className="btn-icon">🔐</span>
+                  Registrar Usuario
+                </>
+              )}
             </button>
           </form>
 
           <div className="footer">
-            <p>
-              <strong>Tecnologías utilizadas:</strong><br/>
-              React + Vercel + AES-128 + CryptoJS
-              <br/>
-              <strong>Seguridad:</strong> Cifrado de contraseñas en el servidor
-              <br/>
-              © 2025 Sistema de Seguridad Informática
-            </p>
+            <div className="tech-stack">
+              <strong>Tecnologías implementadas:</strong>
+              <div className="tech-items">
+                <span>React</span>
+                <span>Vercel</span>
+                <span>AES-128</span>
+                <span>API REST</span>
+              </div>
+            </div>
+            <div className="security-info">
+              <strong>Seguridad:</strong> Las contraseñas se cifran antes de cualquier procesamiento
+            </div>
+            <div className="copyright">
+              © 2025 Sistema de Seguridad - Todos los derechos reservados
+            </div>
           </div>
         </div>
       </div>
