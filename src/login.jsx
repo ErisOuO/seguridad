@@ -2,51 +2,39 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [user, setUser] = useState('')
+  const [nombre, setNombre] = useState('')
+  const [correo, setCorreo] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
 
-  // --- Iniciar sesión ---
-  const handleLogin = async (e) => {
+  // 🔗 Usa la URL de tu backend (cuando lo subas)
+  const API_URL = 'https://seguridad-git-cifrado-s-196ac5-erick-eduardos-projects-7505bdcd.vercel.app/'
+
+  // --- Registrar usuario ---
+  const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
     setMsg('')
 
     try {
-      const res = await fetch('http://localhost:5000/login', {
+      const res = await fetch(`${API_URL}/usuario`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario: user, password }),
+        body: JSON.stringify({ nombre, correo, password }),
       })
 
       const data = await res.json()
       if (res.ok) {
-        alert('Inicio de sesión exitoso ✅')
+        setMsg('✅ Usuario registrado correctamente')
+        setNombre('')
+        setCorreo('')
+        setPassword('')
       } else {
-        setError(data.error || 'Error en inicio de sesión')
+        setError(data.error || 'Error al registrar usuario')
       }
     } catch (err) {
-      setError('Error al conectar con el servidor')
-    }
-  }
-
-  // --- Registrar usuario ---
-  const handleRegister = async () => {
-    setError('')
-    setMsg('')
-    try {
-      const res = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario: user, password }),
-      })
-
-      const data = await res.json()
-      if (res.ok) setMsg(data.message)
-      else setError(data.error || 'Error al registrar')
-    } catch (err) {
-      setError('Error al conectar con el servidor')
+      setError('⚠️ Error al conectar con el servidor')
     }
   }
 
@@ -62,16 +50,25 @@ function App() {
 
       <div className="right-side">
         <div className="login-box">
-          <h2>Iniciar sesión</h2>
-          <p className="subtitle">Acceso exclusivo para empleados autorizados</p>
+          <h2>Registro de usuario</h2>
+          <p className="subtitle">Guarda nuevos usuarios en la base de datos</p>
 
-          <form onSubmit={handleLogin}>
-            <label>Usuario</label>
+          <form onSubmit={handleRegister}>
+            <label>Nombre</label>
             <input
               type="text"
-              placeholder="Ingresa tu usuario"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
+              placeholder="Ingresa tu nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+
+            <label>Correo</label>
+            <input
+              type="email"
+              placeholder="Ingresa tu correo"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
               required
             />
 
@@ -87,10 +84,7 @@ function App() {
             {error && <p className="error">{error}</p>}
             {msg && <p className="success">{msg}</p>}
 
-            <a href="#" className="forgot">¿Olvidaste tu contraseña?</a>
-
-            <button type="submit">Iniciar sesión</button>
-            <button type="button" onClick={handleRegister}>Registrar usuario</button>
+            <button type="submit">Registrar usuario</button>
           </form>
 
           <p className="footer">
