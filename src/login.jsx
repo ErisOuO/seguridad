@@ -35,20 +35,21 @@ function Login() {
       console.log('📨 Respuesta completa:', data)
 
       if (res.ok && data.success) {
-        // ✅ Mostrar mensaje con información del cifrado
-        setMsg(`${data.message} - Cifrado: ${data.data.password_cifrado.substring(0, 25)}...`)
+        // ✅ Mostrar mensaje con información de MongoDB
+        setMsg(`${data.message} - ID: ${data.data.id}`)
         setNombre('')
         setCorreo('')
         setPassword('')
         
-        // Mostrar en consola el cifrado completo
-        console.log('🔐 INFORMACIÓN COMPLETA DEL CIFRADO:', {
+        // Mostrar en consola la info completa de MongoDB
+        console.log('📊 USUARIO GUARDADO EN MONGODB:', {
+          id: data.data.id,
+          mongo_id: data.data.mongo_id,
+          nombre: data.data.nombre,
+          correo: data.data.correo,
           algoritmo: data.data.algoritmo,
-          cifrado_completo: data.data.password_cifrado,
-          longitud_original: data.data.longitud_original,
-          longitud_cifrado: data.data.longitud_cifrado,
-          nota: data.data.nota,
-          fecha: data.data.registeredAt
+          fecha_registro: data.data.fecha_registro,
+          cifrado: data.data.password_cifrado
         })
       } else {
         setError(data.error || '❌ Error al registrar usuario')
@@ -70,7 +71,7 @@ function Login() {
           className="logo-large"
         />
         <div className="security-badge">
-          <span>🔒 Cifrado AES-128</span>
+          <span>🔒 Cifrado AES-128 + MongoDB</span>
         </div>
       </div>
 
@@ -78,7 +79,7 @@ function Login() {
         <div className="login-box">
           <div className="header">
             <h2>Registro Seguro</h2>
-            <p className="subtitle">Sistema de cifrado avanzado</p>
+            <p className="subtitle">Usuarios guardados en base de datos MongoDB</p>
           </div>
 
           <form onSubmit={handleRegister}>
@@ -118,7 +119,7 @@ function Login() {
                 disabled={loading}
               />
               <div className="password-info">
-                🔐 Esta contraseña será cifrada con AES-128
+                🔐 Esta contraseña será cifrada y guardada en MongoDB
               </div>
             </div>
 
@@ -148,12 +149,12 @@ function Login() {
               {loading ? (
                 <>
                   <span className="loading-spinner"></span>
-                  Procesando cifrado...
+                  Guardando en MongoDB...
                 </>
               ) : (
                 <>
-                  <span className="btn-icon">🔐</span>
-                  Registrar Usuario
+                  <span className="btn-icon">💾</span>
+                  Guardar en Base de Datos
                 </>
               )}
             </button>
@@ -165,15 +166,16 @@ function Login() {
               <div className="tech-items">
                 <span>React</span>
                 <span>Vercel</span>
+                <span>MongoDB</span>
                 <span>AES-128</span>
                 <span>API REST</span>
               </div>
             </div>
             <div className="security-info">
-              <strong>Seguridad:</strong> Las contraseñas se cifran antes de cualquier procesamiento
+              <strong>Base de datos:</strong> Los usuarios se guardan en MongoDB Atlas con contraseñas cifradas
             </div>
             <div className="copyright">
-              © 2025 Sistema de Seguridad - Todos los derechos reservados
+              © 2025 Sistema de Seguridad con MongoDB
             </div>
           </div>
         </div>
