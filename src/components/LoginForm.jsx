@@ -9,7 +9,7 @@ export default function LoginForm({ onToggle }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch('https://seguridad-git-pin-seguridad-erick-eduardos-projects-7505bdcd.vercel.app/auth/login', {
+    const res = await fetch('https://server-wcpl.onrender.com/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario, contrasena }),
