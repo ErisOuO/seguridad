@@ -6,7 +6,7 @@ export default function VerifyCodeForm({ usuario }) {
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:4000/auth/verify', {
+    const res = await fetch('https://seguridad-git-pin-seguridad-erick-eduardos-projects-7505bdcd.vercel.app/auth/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ usuario, code }),
